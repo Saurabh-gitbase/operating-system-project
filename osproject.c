@@ -1,7 +1,7 @@
 /*
  * pets/pets.c --
  *
- *	Solution for the cats and mice synchronization problem.
+ *	Solution for the cats and mice synchronization process.
  *	Written by Matus Harvan, subsequently modified by Juergen
  *	Schoenwaelder.
  */
