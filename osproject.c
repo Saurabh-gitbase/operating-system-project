@@ -75,7 +75,7 @@ dump_dish (const char *name, pthread_t pet, const char *what,dish_t *dish, int m
         switch (dish->status[i]) 
         {
             case none_eating:
-                printf("||");
+                printf("__");
                 break;
             case cat_eating:
                 printf("cat");
