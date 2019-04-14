@@ -127,7 +127,7 @@ cat(void *arg)
         
         // then find the first available free dish  //
         
-        for (i = 0 ; i < N_DISHES && dish -> status[i] != none_eating ; i++) ;
+        for (i = 0 ; i < DISHES_N && dish -> status[i] != none_eating ; i++) ;
         my_dish = i;
         assert(dish -> status[my_dish] == none_eating);
         dish -> status[my_dish] = cat_eating;
@@ -196,7 +196,7 @@ mouse(void *arg)
 
         // then find the first available free dish //
         
-        for (i = 0; i < N_DISHES && dish -> status[i] != none_eating; i++) ;
+        for (i = 0; i < DISHES_N && dish -> status[i] != none_eating; i++) ;
         my_dish = i;
         assert(dish -> status[my_dish] == none_eating);
         dish -> status[my_dish] = mouse_eating;
