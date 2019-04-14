@@ -15,48 +15,45 @@ Solution - By doing process synchronization using mutex and semaphore we can avo
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <assert.h>
+#include <assert.h>    //provides a macro called assert which can be used to verify assumptions made by the program and print a diagnostic message if this assumption is false.
 #include <unistd.h>
 #include <sys/time.h>
 #include <time.h>
-#include <errno.h>
+#include <errno.h>     //The errno.h header file of the C Standard Library defines the integer variable errno, which is set by system calls and some library functions in the event of an error to indicate what went wrong.
 #include <pthread.h>
 
-#define N_DISHES        2       /* number of dishes */
-#define N_CATS          6       /* number of cats */
-#define N_MICE          2       /* number of mice */
+#define N_DISHES        2       // number of dishes //
+#define N_CATS          6       // number of cats //
+#define N_MICE          2       // number of mice //
 
-#define CAT_WAIT        15      /* max time in seconds a cat sleeps */
-#define CAT_EAT         1       /* how long in seconds a cat is eating */
-#define CAT_N_EAT       4       /* how many times a cat wants to eat */
-#define MOUSE_WAIT      1       /* max time in seconds a mouse sleeps */
-#define MOUSE_EAT       1       /* how long in seconds a mouse is eating */
-#define MOUSE_N_EAT     4       /* how many times a mouse wants to eat */
+#define CAT_WAIT        15      // max time in seconds a cat sleeps //
+#define CAT_EAT         1       // how long in seconds a cat is eating //
+#define CAT_N_EAT       4       // how many times a cat wants to eat //
+#define MOUSE_WAIT      1       // max time in seconds a mouse sleeps //
+#define MOUSE_EAT       1       // how long in seconds a mouse is eating //
+#define MOUSE_N_EAT     4       // how many times a mouse wants to eat //
 
 typedef struct dish {
-    int free_dishes;            /* how many dishes are free */
-    int cats_eating;            /* how many cats are eating at the moment */
-    int mice_eating;            /* how many mice are eating at the moment */
-    int cats_waiting;           /* how many cats are waiting for dish */
+    int free_dishes;            // how many dishes are free //
+    int cats_eating;            // how many cats are eating at the moment //
+    int mice_eating;            // how many mice are eating at the moment //
+    int cats_waiting;           // how many cats are waiting for dish //
+    
     enum {
         none_eating,
         cat_eating,
         mouse_eating
-    } status[N_DISHES];         /* status of each dish */
-    pthread_mutex_t mutex;      /* mutex for accessing dish */
-    pthread_cond_t free_cv;     /* used to wait for a free dish */
-    pthread_cond_t cat_cv;      /* used to wait for coming cats */
+    } status[N_DISHES];         // status of each dish //
+    
+    pthread_mutex_t mutex;      // mutex for accessing dish //
+    pthread_cond_t free_cv;     // used to wait for a free dish //
+    pthread_cond_t cat_cv;      // used to wait for coming cats //
 } dish_t;
 
 static const char *progname = "pets";
 
-/* 
- * Just for debugging, dump the content of the shared data structure.
- */
-
 static void
-dump_dish(const char *name, pthread_t pet, const char *what,
-          dish_t *dish, int my_dish)
+dump_dish(const char *name, pthread_t pet, const char *what,dish_t *dish, int my_dish)
 {
     int i;
     struct tm t;
@@ -67,31 +64,37 @@ dump_dish(const char *name, pthread_t pet, const char *what,
     localtime_r(&tt, &t);
 
     printf("%02d:%02d:%02d [", t.tm_hour, t.tm_min, t.tm_sec);
-    for (i = 0; i < N_DISHES; i++) {
-        if (i) printf(":");
-        switch (dish->status[i]) {
-        case none_eating:
-            printf("-");
-            break;
-        case cat_eating:
-            printf("c");
-            break;
-        case mouse_eating:
-            printf("m");
-            break;
+    
+    for (i = 0; i < N_DISHES; i++) 
+    {
+        if (i) 
+            printf(":");
+        
+        switch (dish->status[i]) 
+        {
+            case none_eating:
+                printf("-");
+                break;
+            case cat_eating:
+                printf("cat");
+                break;
+            case mouse_eating:
+                printf("mouse");
+                break;
         }
     }
     printf("] %s (id %x) %s eating from dish %d\n", name, pet, what, my_dish);
 }
 
 /*
- * Cats wait for a dish to become free and when coming to the dish,
- * they wait for the mice to run away from the dish (they are nice
- * cats and want to eat dish rather than mice). Eating is simulated
- * by a simple sleep().
+     Cats wait for a dish to become free and when coming to the dish,
+     they wait for the mice to run away from the dish (they are nice
+     cats and want to eat dish rather than mice). Eating is simulated
+     by a simple sleep().
  */
 
 static void* 
+
 cat(void *arg)
 {
     dish_t *dish = (dish_t *) arg;
@@ -101,13 +104,16 @@ cat(void *arg)
 
     for (n = CAT_N_EAT; n > 0; n--) {
 
-        pthread_mutex_lock(&dish->mutex);
-        /* wait for a dish to become free */
+        pthread_mutex_lock(&dish->mutex);        // wait for a dish to become free //
+       
         pthread_cond_broadcast(&dish->cat_cv);
         dish->cats_waiting++;
-        while (dish->free_dishes <= 0 || dish->mice_eating > 0) {
-            pthread_cond_wait(&dish->free_cv, &dish->mutex);
+        
+        while (dish -> free_dishes <= 0 || dish -> mice_eating > 0) 
+        {
+            pthread_cond_wait(&dish -> free_cv, &dish -> mutex);
         }
+        
         dish->cats_waiting--;
 
         /* starting to eat - first check everything is fine... */
