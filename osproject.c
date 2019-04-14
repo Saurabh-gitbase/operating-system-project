@@ -33,13 +33,15 @@ Solution - By doing process synchronization using mutex and semaphore we can avo
 #define MOUSE_EAT       1       // how long in seconds a mouse is eating //
 #define MOUSE_N_EAT     4       // how many times a mouse wants to eat //
 
-typedef struct dish {
+typedef struct dish 
+{
     int free_dishes;            // how many dishes are free //
     int cats_eating;            // how many cats are eating at the moment //
     int mice_eating;            // how many mice are eating at the moment //
     int cats_waiting;           // how many cats are waiting for dish //
     
-    enum {
+    enum 
+    {
         none_eating,
         cat_eating,
         mouse_eating
@@ -53,7 +55,7 @@ typedef struct dish {
 static const char *progname = "pets";
 
 static void
-dump_dish(const char *name, pthread_t pet, const char *what,dish_t *dish, int my_dish)
+dump_dish (const char *name, pthread_t pet, const char *what,dish_t *dish, int my_dish)
 {
     int i;
     struct tm t;
@@ -61,7 +63,7 @@ dump_dish(const char *name, pthread_t pet, const char *what,dish_t *dish, int my
     
     tt = time(NULL);
     assert(tt != (time_t) -1);
-    localtime_r(&tt, &t);
+    localtime_r (&tt, &t);
 
     printf("%02d:%02d:%02d [", t.tm_hour, t.tm_min, t.tm_sec);
     
@@ -73,7 +75,7 @@ dump_dish(const char *name, pthread_t pet, const char *what,dish_t *dish, int my
         switch (dish->status[i]) 
         {
             case none_eating:
-                printf("-");
+                printf("||");
                 break;
             case cat_eating:
                 printf("cat");
