@@ -22,11 +22,11 @@ Solution - By doing process synchronization using mutex and semaphore we can avo
 #include <errno.h>     //The errno.h header file of the C Standard Library defines the integer variable errno, which is set by system calls and some library functions in the event of an error to indicate what went wrong.
 #include <pthread.h>
 
-#define N_DISHES        2       // number of dishes //
-#define N_CATS          6       // number of cats //
-#define N_MICE          2       // number of mice //
+#define N_DISHES        2       // number of dishes we will allocate to cat a and mice //
+#define N_CATS          6       // number of cats we have  //
+#define N_MICE          2       // number of mice we have //
 
-#define CAT_WAIT        15      // max time in seconds a cat sleeps //
+#define CAT_WAIT        15      // Max time in seconds a cat sleeps //
 #define CAT_EAT         1       // how long in seconds a cat is eating //
 #define CAT_N_EAT       4       // how many times a cat wants to eat //
 #define MOUSE_WAIT      1       // max time in seconds a mouse sleeps //
