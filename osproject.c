@@ -22,7 +22,7 @@ Solution - By doing process synchronization using mutex and semaphore we can avo
 #include <errno.h>     //The errno.h header file of the C Standard Library defines the integer variable errno, which is set by system calls and some library functions in the event of an error to indicate what went wrong.
 #include <pthread.h>
 
-#define N_DISHES        2       // number of dishes we will allocate to cat a and mice //
+#define DISHES_N        2       // number of dishes we will allocate to cat a and mice //
 #define N_CATS          6       // number of cats we have  //
 #define N_MICE          2       // number of mice we have //
 
@@ -45,7 +45,7 @@ typedef struct dish
         none_eating,
         cat_eating,
         mouse_eating
-    } status[N_DISHES];         // status of each dish //
+    } status[DISHES_N];         // status of each dish //
     
     pthread_mutex_t mutex;      // mutex for accessing dish //
     pthread_cond_t free_cv;     // used to wait for a free dish //
@@ -67,7 +67,7 @@ dump_dish (const char *name, pthread_t pet, const char *what,dish_t *dish, int m
 
     printf("%02d:%02d:%02d [", t.tm_hour, t.tm_min, t.tm_sec);
     
-    for (i = 0; i < N_DISHES; i++) 
+    for (i = 0; i < DISHES_N; i++) 
     {
         if (i) 
             printf(":");
@@ -139,7 +139,7 @@ cat(void *arg)
         
         // finished eating - check everything is fine and update state //
         pthread_mutex_lock (&dish -> mutex);
-        assert(dish -> free_dishes < N_DISHES);
+        assert(dish -> free_dishes < DISHES_N);
         dish -> free_dishes++;
         assert(dish -> cats_eating > 0);
         dish -> cats_eating--;
@@ -216,7 +216,7 @@ mouse(void *arg)
         
         // finished eating - check everything is fine and update state //
         pthread_mutex_lock ( &dish -> mutex );
-        assert( dish -> free_dishes < N_DISHES );
+        assert( dish -> free_dishes < DISHES_N );
         dish -> free_dishes++;
         assert ( dish -> cats_eating == 0);
         assert (dish -> mice_eating > 0);
@@ -252,7 +252,7 @@ main(int argc, char *argv[])
 
     dish = &_dish;
     memset ( dish, 0, sizeof(dish_t));
-    dish -> free_dishes = N_DISHES;
+    dish -> free_dishes = DISHES_N;
     pthread_mutex_init ( &dish -> mutex, NULL);
     pthread_cond_init ( &dish -> free_cv, NULL);
     pthread_cond_init ( &dish -> cat_cv, NULL);
