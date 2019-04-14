@@ -12,13 +12,13 @@ Solution - By doing process synchronization using mutex and semaphore we can avo
 */
 
 
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-#include <assert.h>    //provides a macro called assert which can be used to verify assumptions made by the program and print a diagnostic message if this assumption is false.
 #include <unistd.h>
 #include <sys/time.h>
 #include <time.h>
+#include <assert.h>    //provides a macro called assert which can be used to verify assumptions made by the program and print a diagnostic message if this assumption is false.
 #include <errno.h>     //The errno.h header file of the C Standard Library defines the integer variable errno, which is set by system calls and some library functions in the event of an error to indicate what went wrong.
 #include <pthread.h>
 
