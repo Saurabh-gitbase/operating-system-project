@@ -292,5 +292,5 @@ main(int argc, char *argv[])
     pthread_cond_destroy ( &dish -> free_cv);
     pthread_cond_destroy ( &dish -> cat_cv);
     
-    return EXIT_SUCCESS;
+    return 0;
 }
