@@ -114,39 +114,42 @@ cat(void *arg)
             pthread_cond_wait(&dish -> free_cv, &dish -> mutex);
         }
         
-        dish->cats_waiting--;
+        dish -> cats_waiting--;
 
-        /* starting to eat - first check everything is fine... */
-        assert(dish->free_dishes > 0);
-        dish->free_dishes--;
-        assert(dish->cats_eating < N_CATS);
-        dish->cats_eating++;
+        // starting to eat - first check everything is fine //
         
-        /* ...then find the first available free dish */
-        for (i = 0; i < N_DISHES && dish->status[i] != none_eating; i++) ;
+        assert(dish -> free_dishes > 0);
+        dish -> free_dishes--;
+        assert(dish -> cats_eating < N_CATS);
+        dish -> cats_eating++;
+        
+        // then find the first available free dish  //
+        
+        for (i = 0 ; i < N_DISHES && dish -> status[i] != none_eating ; i++) ;
         my_dish = i;
-        assert(dish->status[my_dish] == none_eating);
-        dish->status[my_dish] = cat_eating;
+        assert(dish -> status[my_dish] == none_eating);
+        dish -> status[my_dish] = cat_eating;
         dump_dish("cat", pthread_self(), "started", dish, my_dish);
-        pthread_mutex_unlock(&dish->mutex);
+        pthread_mutex_unlock (&dish  ->  mutex);
 
-        /* cats simply eat - mice avoid meeting cats for obvious reasons */
+        // cats simply eat - mice avoid meeting cats for obvious reasons //
         sleep(CAT_EAT);
         
-        /* finished eating - check everything is fine and update state */
-        pthread_mutex_lock(&dish->mutex);
-        assert(dish->free_dishes < N_DISHES);
-        dish->free_dishes++;
-        assert(dish->cats_eating > 0);
-        dish->cats_eating--;
-        dish->status[my_dish] = none_eating;
+        // finished eating - check everything is fine and update state //
+        pthread_mutex_lock (&dish -> mutex);
+        assert(dish -> free_dishes < N_DISHES);
+        dish -> free_dishes++;
+        assert(dish -> cats_eating > 0);
+        dish -> cats_eating--;
+        dish -> status[my_dish] = none_eating;
 
-        /* finally  tell others we're done eating */
-        pthread_cond_broadcast(&dish->free_cv);
-        dump_dish("cat", pthread_self(), "finished", dish, my_dish);
-        pthread_mutex_unlock(&dish->mutex);
+        // finally  tell others we're done eating //
+        pthread_cond_broadcast (&dish -> free_cv);
+        dump_dish ("cat", pthread_self(), "finished", dish, my_dish);
+        pthread_mutex_unlock (&dish -> mutex);
 
-        /* sleep some time to give others a chance to grab some food */
+        // sleep some time to give others a chance to grab some food //
+        
         sleep(rand() % CAT_WAIT);
     }
 
@@ -160,6 +163,7 @@ cat(void *arg)
  */
 
 static void* 
+
 mouse(void *arg)
 {
     dish_t *dish = (dish_t *) arg;
@@ -169,16 +173,19 @@ mouse(void *arg)
     int my_dish;
     int i;
 
-    for (n = MOUSE_N_EAT; n > 0; n--) {
+    for (n = MOUSE_N_EAT; n > 0; n--) 
+    {
 
-        pthread_mutex_lock(&dish->mutex);
-        /* wait for a dish to become free and cats go away */
-        while (dish->free_dishes <= 0 || dish->cats_eating > 0
-               || dish->cats_waiting > 0) {
+        pthread_mutex_lock(&dish -> mutex);
+        // wait for a dish to become free and cats go away //
+        
+        while (dish -> free_dishes <= 0 || dish -> cats_eating > 0 || dish->cats_waiting > 0) 
+        {
             pthread_cond_wait(&dish->free_cv, &dish->mutex);
         }
 
-        /* starting to eat - first check everything is fine... */
+        // starting to eat - first check everything is fine // //12345667//
+        
         assert(dish->free_dishes > 0);
         dish->free_dishes--;
         assert(dish->cats_eating == 0);
